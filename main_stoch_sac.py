@@ -15,7 +15,7 @@ if __name__=='__main__':
 	# env = gym.make('InvertedPendulumBulletEnv-v0')
 
 	register(id='Stoch2-v0',
-           entry_point='gym_sloped_terrain.envs.stoch2_pybullet_env:Stoch2Env', 
+           entry_point='stoch_gym.envs.stoch2_pybullet_env:Stoch2Env', 
            kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 20, 'stairs': 0} )
   
 #     env = gym.make('InvertedPendulumBulletEnv-v0')

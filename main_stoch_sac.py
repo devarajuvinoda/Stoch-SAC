@@ -16,24 +16,24 @@ if __name__=='__main__':
 
 	register(id='Stoch2-v0',
            entry_point='gym_sloped_terrain.envs.stoch2_pybullet_env:Stoch2Env', 
-           kwargs = {'gait' : 'trot', 'render': True, 'action_dim': 20, 'stairs': 0} )
+           kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 20, 'stairs': 0} )
   
 #     env = gym.make('InvertedPendulumBulletEnv-v0')
 #     env = gym.make('HalfCheetahBulletEnv-v0')
 	env = gym.make('Stoch2-v0')
 	agent = Agent(env=env, input_dims=env.observation_space.shape,
 					n_actions=env.action_space.shape[0])
-	n_episodes = 10
+	n_episodes = 201
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		vide_callable=lambda episode_id: episode_id%5==0, force=True)
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		video_callable=lambda episode_id: True, force=True)
 
-	file_name = 'plot_name.png'
+	file_name = 'stoch_plot1.png'
 	figure_file = 'plots/' + file_name 
 	best_score = env.reward_range[0]
 	score_history = []
-	load_chkpt = True
+	load_chkpt = False
 
 	if load_chkpt:
 		agent.load_models(300)
@@ -46,9 +46,7 @@ if __name__=='__main__':
 		score = 0
 		while not done:
 			action = agent.choose_action(observation)
-			print("action: ", action)
 			next_observation, reward, done, info = env.step(action)
-			print("next_observation, reward, done, info : ",next_observation, reward, done, info)
 			score += reward 
 			agent.store_tuples(observation, action, reward, next_observation, done)
 

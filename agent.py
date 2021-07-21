@@ -47,7 +47,7 @@ class Agent:
 		for i, weight in enumerate(self.value.weights):
 			weights.append(weight * tau + targets[i] * (1-tau))
 
-		self.target_value.set_weights
+		self.target_value.set_weights(weights)
 
 
 	def choose_action(self, observation):

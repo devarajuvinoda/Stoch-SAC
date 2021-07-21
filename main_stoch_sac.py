@@ -6,7 +6,7 @@ import pybullet
 import numpy as np
 import matplotlib.pyplot as plt
 from gym import wrappers
-import gym_sloped_terrain.envs.stoch2_pybullet_env as e
+import stoch_gym.envs.stoch2_pybullet_env as e
 #Registering new environments
 from gym.envs.registration import registry, register, make, spec
 

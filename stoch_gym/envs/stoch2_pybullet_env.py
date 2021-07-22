@@ -1,14 +1,14 @@
 import numpy as np
 import gym
 from gym import spaces
-import gym_sloped_terrain.envs.walking_controller as walking_controller
+import stoch_gym.envs.walking_controller as walking_controller
 import math
 import random
 from collections import deque
 import pybullet
-import gym_sloped_terrain.envs.bullet_client as bullet_client
+import stoch_gym.envs.bullet_client as bullet_client
 import pybullet_data
-import gym_sloped_terrain.envs.planeEstimation.get_terrain_normal as normal_estimator
+import stoch_gym.envs.planeEstimation.get_terrain_normal as normal_estimator
 
 
 
@@ -185,7 +185,7 @@ class Stoch2Env(gym.Env):
 			self.wedgeOrientation = self._pybullet_client.getQuaternionFromEuler([0, 0, self.incline_ori])
 
 			if not (self.downhill):
-				wedge_model_path = "gym_sloped_terrain/envs/Wedges/uphill/urdf/wedge_" + str(
+				wedge_model_path = "stoch_gym/envs/Wedges/uphill/urdf/wedge_" + str(
 					self.incline_deg) + ".urdf"
 
 				self.INIT_ORIENTATION = self._pybullet_client.getQuaternionFromEuler(
@@ -198,7 +198,7 @@ class Stoch2Env(gym.Env):
 				self.INIT_POSITION = [self.INIT_POSITION[0], self.INIT_POSITION[1], self.robot_landing_height]
 
 			else:
-				wedge_model_path = "gym_sloped_terrain/envs/Wedges/downhill/urdf/wedge_" + str(
+				wedge_model_path = "stoch_gym/envs/Wedges/downhill/urdf/wedge_" + str(
 					self.incline_deg) + ".urdf"
 
 				self.robot_landing_height = wedge_halfheight_offset + 0.28 + math.tan(
@@ -213,7 +213,7 @@ class Stoch2Env(gym.Env):
 			self.SetWedgeFriction(0.7)
 
 
-		model_path = 'gym_sloped_terrain/envs/robots/stoch_two_abduction_urdf/urdf/stoch_two_abduction_urdf.urdf'
+		model_path = 'stoch_gym/envs/robots/stoch_two_abduction_urdf/urdf/stoch_two_abduction_urdf.urdf'
 		self.stoch2 = self._pybullet_client.loadURDF(model_path, self.INIT_POSITION,self.INIT_ORIENTATION)
 
 		self._joint_name_to_id, self._motor_id_list  = self.BuildMotorIdList()

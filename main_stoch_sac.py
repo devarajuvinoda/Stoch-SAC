@@ -1,4 +1,4 @@
-from agent import Agent
+from agent2 import Agent
 from plot_utils import plot_learning_curve
 import gym
 import pybullet_envs
@@ -16,7 +16,7 @@ if __name__=='__main__':
 
 	register(id='Stoch2-v0',
            entry_point='stoch_gym.envs.stoch2_pybullet_env:Stoch2Env', 
-           kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 20, 'stairs': 0} )
+           kwargs = {'gait' : 'trot', 'render': True, 'action_dim': 20, 'stairs': 0} )
   
 #     env = gym.make('InvertedPendulumBulletEnv-v0')
 #     env = gym.make('HalfCheetahBulletEnv-v0')
@@ -33,10 +33,10 @@ if __name__=='__main__':
 	figure_file = 'plots/' + file_name 
 	best_score = env.reward_range[0]
 	score_history = []
-	load_chkpt = False
+	load_chkpt = True
 
 	if load_chkpt:
-		agent.load_models(300)
+		agent.load_models(200)
 		env.render(mode='human')
 
 

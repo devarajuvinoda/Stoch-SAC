@@ -23,7 +23,7 @@ if __name__=='__main__':
 	env = gym.make('Stoch2-v0')
 	agent = Agent(env=env, input_dims=env.observation_space.shape,
 					n_actions=env.action_space.shape[0])
-	n_episodes = 101
+	n_episodes = 10001
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		vide_callable=lambda episode_id: episode_id%5==0, force=True)
 	# env = wrappers.Monitor(env, 'tmp/video', 
@@ -63,7 +63,7 @@ if __name__=='__main__':
 		# 	if not load_chkpt:
 		# 		agent.save_models()
 
-		if i%5==0 and not load_chkpt:
+		if i%50==0 and not load_chkpt:
 			agent.save_models(i)
 			x = [j+1 for j in range(i+1)]
 			plot_learning_curve(x, score_history, figure_file)

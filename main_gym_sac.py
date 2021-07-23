@@ -11,7 +11,7 @@ def run_model(env_name, folder_name):
     env = gym.make(env_name)
     agent = Agent(input_dims=env.observation_space.shape, env=env,
             n_actions=env.action_space.shape[0])
-    n_episodes = 1001
+    n_episodes = 10001
     # uncomment this line and do a mkdir tmp && mkdir tmp/video if you want to
     # record video of the agent playing the game.
     env = wrappers.Monitor(env, folder_name, video_callable=lambda episode_id: episode_id%20==0, force=True)
@@ -21,7 +21,7 @@ def run_model(env_name, folder_name):
 
     best_score = env.reward_range[0]
     score_history = []
-    load_chkpt = True
+    load_chkpt = False
 
     if load_chkpt:
         agent.load_models(1000)
@@ -47,7 +47,7 @@ def run_model(env_name, folder_name):
 #             if not load_chkpt:
 #                 agent.save_models()
 
-        if i%5==0 and not load_chkpt:
+        if i%50==0 and not load_chkpt:
             agent.save_models(i)
 
         print('episode ', i, 'score %.1f' % score, 'avg_score %.1f' % avg_score)

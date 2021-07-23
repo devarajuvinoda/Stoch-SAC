@@ -8,7 +8,7 @@ import numpy as np
 class ActorNetwork(tf.keras.Model):
 	
 	def __init__(self, max_action, layer1_dims = 256, layer2_dims = 256, 
-			n_actions=2, name='actor', chkpt_dir='tmp/sacv0/humanoid'):
+			n_actions=2, name='actor', chkpt_dir='tmp/sac'):
 
 		super().__init__() 
 		self.layer1_dims = layer1_dims
@@ -50,7 +50,7 @@ class ActorNetwork(tf.keras.Model):
 class CriticNetwork(tf.keras.Model):
 
 	def __init__(self, n_actions, layer1_dims=256, layer2_dims=256,
-			name='critic', chkpt_dir='tmp/sacv0/humanoid'):
+			name='critic', chkpt_dir='tmp/sac'):
 
 		super().__init__()
 
@@ -75,7 +75,7 @@ class CriticNetwork(tf.keras.Model):
 class ValueNetwork(tf.keras.Model):
 
 	def __init__(self, layer1_dims=256, layer2_dims=256, name='value',
-			chkpt_dir='tmp/sacv0/humanoid'):
+			chkpt_dir='tmp/sac'):
 
 		super().__init__()
 

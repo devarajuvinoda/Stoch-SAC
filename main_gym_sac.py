@@ -1,28 +1,30 @@
 import pybullet_envs
 import gym
 import numpy as np
-from agent import Agent
+from agent2 import Agent
 from plot_utils import plot_learning_curve
 from gym import wrappers
 
-if __name__ == '__main__':
-    env = gym.make('HalfCheetahBulletEnv-v0')
+def run_model(env_name, folder_name):
+        # env = gym.make('HalfCheetahBulletEnv-v0')
+    print("env_name: ", env_name)
+    env = gym.make(env_name)
     agent = Agent(input_dims=env.observation_space.shape, env=env,
             n_actions=env.action_space.shape[0])
-    n_episodes = 301
+    n_episodes = 1001
     # uncomment this line and do a mkdir tmp && mkdir tmp/video if you want to
     # record video of the agent playing the game.
-    env = wrappers.Monitor(env, 'tmp/video', video_callable=lambda episode_id: True, force=True)
-    filename = 'HalfCheetahBulletEnv.png'
+    env = wrappers.Monitor(env, folder_name, video_callable=lambda episode_id: episode_id%20==0, force=True)
+    filename = env_name
 
     figure_file = 'plots/' + filename
 
     best_score = env.reward_range[0]
     score_history = []
-    load_chkpt = False
+    load_chkpt = True
 
     if load_chkpt:
-        agent.load_models()
+        agent.load_models(1000)
         env.render(mode='human')
 
     for i in range(n_episodes):
@@ -54,3 +56,11 @@ if __name__ == '__main__':
         x = [i+1 for i in range(n_episodes)]
         plot_learning_curve(x, score_history, figure_file)
 
+
+if __name__ == '__main__':
+    run_model('InvertedPendulumBulletEnv-v0', 'tmp/video_iv')
+    run_model('Walker2DBulletEnv-v0', 'tmp/video_wal')    
+    run_model('HumanoidBulletEnv-v0', 'tmp/video_huma')
+    
+    # run_model('HalfCheetahBulletEnv-v0', 'tmp/video_hc')
+    # run_model('AntBulletEnv-v0', 'tmp/video_ant')

@@ -10,7 +10,8 @@ class Agent:
 
     def __init__(self, policy_lr=0.0003, q_fun_lr=0.0003, alpha_lr=0.0003,gamma=0.99, 
             env=None, input_dims=[8], n_actions=2, max_size=100000, tau=0.005, 
-            layer1_dims=256, layer2_dims=256, batch_size=256, reward_scale=2, target_entropy=-20):
+            layer1_dims=256, layer2_dims=256, batch_size=256, reward_scale=2, 
+            target_entropy=-20):
 
         self.gamma = gamma 
         self.tau = tau 
@@ -38,7 +39,6 @@ class Agent:
         self.scale = reward_scale 
         self.target_entropy = target_entropy
         self.log_alpha = tf.Variable(0.0)
-        self.alpha = tfp.util.DeferredTensor(self.log_alpha, tf.exp)
         self.alpha_optimizer = tf.optimizers.Adam(learning_rate=alpha_lr)
         self.update_network_parameters(self.target_1, self.critic_1, tau=1)
         self.update_network_parameters(self.target_2, self.critic_2, tau=1)
@@ -65,7 +65,6 @@ class Agent:
     def store_tuples(self, curr_state, action, reward, next_state, done):
         self.memory.store_transitions(curr_state, action, reward, next_state, done)
 
-
     def learn(self):
         if self.memory.mem_cnt < self.batch_size:
             return 
@@ -84,7 +83,7 @@ class Agent:
             target_q1 = self.target_1(curr_states, new_policy_actions)
             target_q2 = self.target_2(curr_states, new_policy_actions)
 
-            entropy_scale = tf.convert_to_tensor(self.alpha)
+            entropy_scale = tf.convert_to_tensor(tf.exp(self.log_alpha))
             target_val = tf.squeeze(
                     tf.math.minimum(target_q1, target_q2),1) - entropy_scale * log_probs
             target_q = reward + (1-done)* self.gamma * target_val
@@ -112,7 +111,7 @@ class Agent:
             critic_value = tf.squeeze(tf.math.minimum(
                                         q1_new_policy, q2_new_policy), 1)
 
-            entropy_scale = tf.convert_to_tensor(self.alpha)
+            entropy_scale = tf.convert_to_tensor(tf.exp(self.log_alpha))
             actor_loss = entropy_scale * log_probs - critic_value 
             actor_loss = tf.math.reduce_mean(actor_loss)
         actor_network_gradient = tape.gradient(actor_loss, self.actor.trainable_weights)
@@ -122,7 +121,7 @@ class Agent:
         with tf.GradientTape() as tape:
             new_policy_actions, log_probs = self.actor.sample_normal(curr_states)
             log_probs = tf.squeeze(log_probs, 1)
-            alpha_losses = -1.0 * (self.alpha * tf.stop_gradient(log_probs + 
+            alpha_losses = -1.0 * (self.log_alpha * tf.stop_gradient(log_probs + 
                                                                 self.target_entropy))
             alpha_loss = tf.nn.compute_average_loss(alpha_losses)
 

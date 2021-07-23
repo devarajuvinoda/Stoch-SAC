@@ -16,29 +16,29 @@ if __name__=='__main__':
 
 	register(id='Stoch2-v0',
            entry_point='stoch_gym.envs.stoch2_pybullet_env:Stoch2Env', 
-           kwargs = {'gait' : 'trot', 'render': True, 'action_dim': 20, 'stairs': 0} )
+           kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 20, 'stairs': 0} )
   
 #     env = gym.make('InvertedPendulumBulletEnv-v0')
 #     env = gym.make('HalfCheetahBulletEnv-v0')
 	env = gym.make('Stoch2-v0')
 	agent = Agent(env=env, input_dims=env.observation_space.shape,
 					n_actions=env.action_space.shape[0])
-	n_episodes = 201
+	n_episodes = 101
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		vide_callable=lambda episode_id: episode_id%5==0, force=True)
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		video_callable=lambda episode_id: True, force=True)
 
-	file_name = 'stoch_plot1.png'
+	file_name = 'stoch_plot_penalty.png'
 	figure_file = 'plots/' + file_name 
 	best_score = env.reward_range[0]
 	score_history = []
-	load_chkpt = True
+	load_chkpt = False
 
 	if load_chkpt:
 		agent.load_models(200)
 		env.render(mode='human')
-
+	# env.render(mode='human')
 
 	for i in range(n_episodes):		
 		observation = env.reset()
@@ -65,6 +65,8 @@ if __name__=='__main__':
 
 		if i%5==0 and not load_chkpt:
 			agent.save_models(i)
+			x = [j+1 for j in range(i+1)]
+			plot_learning_curve(x, score_history, figure_file)
 
 		print('episode: ',i, ' score: %.2f'%score, ' avg_score: %.2f'%avg_score)
 	

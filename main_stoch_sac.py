@@ -23,7 +23,7 @@ if __name__=='__main__':
 	env = gym.make('Stoch2-v0')
 	agent = Agent(env=env, input_dims=env.observation_space.shape,
 					n_actions=env.action_space.shape[0])
-	n_episodes = 10001
+	n_episodes = 2001
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		vide_callable=lambda episode_id: episode_id%5==0, force=True)
 	# env = wrappers.Monitor(env, 'tmp/video', 

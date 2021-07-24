@@ -674,14 +674,14 @@ class Stoch2Env(gym.Env):
 			reward = round(yaw_reward, 4) + round(pitch_reward, 4) + round(roll_reward, 4)\
 					 + round(height_reward,4) + 100 * round(step_distance_x, 4)
 
-			
+			'''
 			#Penalize for standing at same position for continuous 150 steps
 			self.step_disp.append(step_distance_x)
 		
 			if(self._n_steps>150):
 				if(sum(self.step_disp)<0.035):
 					reward = reward-standing_penalty
-			
+			'''
 
 		return reward, done
 

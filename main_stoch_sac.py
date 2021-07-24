@@ -29,7 +29,7 @@ if __name__=='__main__':
 	# env = wrappers.Monitor(env, 'tmp/video', 
 	# 		video_callable=lambda episode_id: True, force=True)
 
-	file_name = 'stoch_plot_penalty.png'
+	file_name = 'stoch_plot_no_penalty.png'
 	figure_file = 'plots/' + file_name 
 	best_score = env.reward_range[0]
 	score_history = []

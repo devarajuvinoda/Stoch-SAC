@@ -1,0 +1,11 @@
+learning_rate: 0.02
+noise: 0.03
+env_name: Stochlite-v0
+episode_length: 100
+direction ratio: 2.111111111111111
+Normal initialization: 0
+Gait: trot
+Incline_Orientaion_Anti-Clockwise: True
+domain_Randomization: 1
+Curriculmn introduced at iteration: 0
+

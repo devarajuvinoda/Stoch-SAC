@@ -16,6 +16,7 @@ from collections import namedtuple
 from utils.ik_class import Stoch2Kinematics
 from utils.ik_class import LaikagoKinematics
 from utils.ik_class import HyqKinematics
+from utils.ik_class_stochlite import StochliteKinematics
 import numpy as np
 
 PI = np.pi
@@ -73,6 +74,7 @@ class WalkingController():
         self.Stoch2_Kin = Stoch2Kinematics()
         self.Laikago_Kin = LaikagoKinematics()
         self.Hyq_Kin = HyqKinematics()
+        self.stochlite_kin = StochliteKinematics()
 
     def update_leg_theta(self, theta):
         """ Depending on the gait, the theta for every leg is calculated"""
@@ -308,6 +310,70 @@ def constrain_abduction(angle):
         angle = 0.35
     return angle
 
+    def run_elliptical_Traj_Stochlite(self, theta, action):
+        '''
+        Semi-elliptical trajectory controller
+        Args:
+            theta  : trajectory cycle parameter theta
+            action : trajectory modulation parameters predicted by the policy
+        Ret:
+            leg_motor_angles : list of motors positions for the desired action [FLH FLK FRH FRK BLH BLK BRH BRK FLA FRA BLA BRA]
+            Note: we are using the right hand rule for the conventions of the leg which is - x->front, y->left, z->up
+        '''
+        legs = self.initialize_leg_state(theta, action)
+
+        z_center = -0.25 # changed, initial -0.28, changed wrt reset angles
+        foot_clearance = 0.06
+
+        for leg in legs:
+            leg_theta = (leg.theta / (2 * no_of_points)) * 2 * PI
+            leg.r = leg.step_length / 2
+
+            if self.gait_type == "trot":
+                x = -leg.r * np.cos(leg_theta) + leg.x_shift # negate this equation if the bot walks backwards
+                if leg_theta > PI: # theta taken from +x, CW # Flip this sigh if the trajectory is mirrored
+                    flag = 0 #z-coordinate of ellipse, during stance_phase of walking
+                else:
+                    flag = 1 #z-coordinate of ellipse, during swing_phase of walking
+                z = foot_clearance * np.sin(leg_theta) * flag + z_center + leg.z_shift
+
+            leg.x, leg.y, leg.z = np.array(
+                [[np.cos(leg.phi), -np.sin(leg.phi), 0], [np.sin(leg.phi), np.cos(leg.phi), 0], [0, 0, 1]]) @ np.array(
+                [x, 0, z]) # rotating about z by steer_angle phi, CCW
+
+            if leg.name == "FR" or leg.name == "BR":
+                leg.y = leg.y - self.link_lengths_stochlite[0] + leg.y_shift
+            else:
+                leg.y = leg.y + self.link_lengths_stochlite[0] + leg.y_shift # abd_link = 0.096, abd in x-z plane, not foot contact 
+            
+            # print("In walking controller")
+            # print(leg.name, leg.x, leg.y, leg.z)
+
+            # if leg.name == "FR" or leg.name == "BR":
+            #     leg.x = -0.04
+            #     leg.y = -0.056
+            #     leg. z = -0.25
+            # else:
+            #     leg.x = -0.04
+            #     leg.y = 0.056
+            #     leg. z = -0.25
+
+            branch = "<"
+            _,[leg.motor_abduction, leg.motor_hip, leg.motor_knee] = self.stochlite_kin.inverseKinematics(leg.name, [leg.x, leg.y, leg.z], branch)
+            # print(leg.motor_knee,leg.motor_hip,leg.motor_abduction)
+
+        leg_motor_angles = [legs.front_left.motor_hip, legs.front_left.motor_knee, legs.front_right.motor_hip,
+                            legs.front_right.motor_knee,
+                            legs.back_left.motor_hip, legs.back_left.motor_knee, legs.back_right.motor_hip,
+                            legs.back_right.motor_knee,
+                            legs.front_left.motor_abduction, legs.front_right.motor_abduction,
+                            legs.back_left.motor_abduction, legs.back_right.motor_abduction]
+        
+        # leg_motor_angles = np.zeros(12) 
+        # print("Angles")
+        # print(leg_motor_angles)
+
+        return leg_motor_angles
 
 if (__name__ == "__main__"):
     walkcon = WalkingController(phase=[PI, 0, 0, PI])

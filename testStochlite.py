@@ -2,7 +2,7 @@
 # Written by Tejas Rane (May, 2021)
 
 import sys, os
-import gym_sloped_terrain.envs.stochlite_pybullet_env as e
+import stoch_gym.envs.stochlite_pybullet_env as e
 import utils.joystick as j
 import argparse
 from fabulous.color import blue,green,red,bold

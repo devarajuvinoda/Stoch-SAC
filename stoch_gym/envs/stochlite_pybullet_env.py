@@ -285,7 +285,7 @@ class StochliteEnv(gym.Env):
             self.wedgeOrientation = self._pybullet_client.getQuaternionFromEuler([0, 0, self.incline_ori])
 
             if not (self.downhill):
-                wedge_model_path = "gym_sloped_terrain/envs/Wedges/uphill/urdf/wedge_" + str(self.incline_deg) + ".urdf"
+                wedge_model_path = "stoch_gym/envs/Wedges/uphill/urdf/wedge_" + str(self.incline_deg) + ".urdf"
 
                 self.INIT_ORIENTATION = self._pybullet_client.getQuaternionFromEuler(
                     [math.radians(self.incline_deg) * math.sin(self.incline_ori),
@@ -298,7 +298,7 @@ class StochliteEnv(gym.Env):
 
 
             else:
-                wedge_model_path = "gym_sloped_terrain/envs/Wedges/downhill/urdf/wedge_" + str(self.incline_deg) + ".urdf"
+                wedge_model_path = "stoch_gym/envs/Wedges/downhill/urdf/wedge_" + str(self.incline_deg) + ".urdf"
 
                 self.robot_landing_height = wedge_halfheight_offset + 0.28 + math.tan(math.radians(self.incline_deg)) * 1.5
 

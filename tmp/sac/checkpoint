@@ -1,2 +1,2 @@
-model_checkpoint_path: "target2_sac1850"
-all_model_checkpoint_paths: "target2_sac1850"
+model_checkpoint_path: "target2_sac2000"
+all_model_checkpoint_paths: "target2_sac2000"

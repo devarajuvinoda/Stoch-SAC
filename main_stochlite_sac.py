@@ -16,7 +16,7 @@ if __name__=='__main__':
 
     register(id='Stochlite-v0',
            entry_point='stoch_gym.envs.stochlite_pybullet_env:StochliteEnv', 
-           kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 15, 'stairs': 0} )
+           kwargs = {'gait' : 'trot', 'render': True, 'action_dim': 15, 'stairs': 0} )
 
     #     env = gym.make('InvertedPendulumBulletEnv-v0')
     #     env = gym.make('HalfCheetahBulletEnv-v0')
@@ -28,15 +28,15 @@ if __name__=='__main__':
     # 		vide_callable=lambda episode_id: episode_id%5==0, force=True)
     # env = wrappers.Monitor(env, 'tmp/video', 
     # 		video_callable=lambda episode_id: True, force=True)
-
+    pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
     file_name = 'stochlite_plot.png'
     figure_file = 'plots/' + file_name 
     best_score = env.reward_range[0]
     score_history = []
-    load_chkpt = False
+    load_chkpt = True
 
     if load_chkpt:
-        agent.load_models(200)
+        agent.load_models(5000)
         env.render(mode='human')
     # env.render(mode='human')
 

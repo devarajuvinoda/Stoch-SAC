@@ -34,7 +34,7 @@ if __name__=='__main__':
 	best_score = env.reward_range[0]
 	score_history = []
 	load_chkpt = False
-    pybullet.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+    pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
 	if load_chkpt:
 		agent.load_models(200)
 		env.render(mode='human')

@@ -15,10 +15,18 @@ if (__name__ == "__main__"):
 	policy = np.load("experiments/"+policy_dir+"/iterations/best_policy.npy") # Loading the best policy PolicyDir
 	print(policy)
 
+	wedge_present = False 
+
+	# wedge
+	# wedge_present = True 
+
+
 	iter = 1
 	episode_length = 1000
-	env = e.StochliteEnv(render=True, end_steps = episode_length*iter, on_rack=False,
-						 gait = 'trot')
+	env = e.StochliteEnv(render=True, end_steps = episode_length*iter, wedge=wedge_present, 
+						on_rack=False, gait = 'trot')
+
+	# env.incline_deg = 11
 
 	obs = env.reset()
 
@@ -29,7 +37,10 @@ if (__name__ == "__main__"):
 		obs = env.reset()
 		for i_step in range(episode_length):
 			state = obs
-			state[7] = 0.4
+			state[7] = 0.5
+			# state[8] = 0.4
+			# state[9] = 0.4
+
 			# print("state: ", state)
 			# print("GetBaseLinearVelocity: ",env.GetBaseLinearVelocity())
 			action = policy.dot(state)

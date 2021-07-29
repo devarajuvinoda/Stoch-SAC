@@ -8,7 +8,7 @@ import numpy as np
 class ActorNetwork(tf.keras.Model):
 	
 	def __init__(self, max_action, layer1_dims = 256, layer2_dims = 256, 
-			n_actions=2, name='actor', chkpt_dir='tmp/sac_stochlite_lin'):
+			n_actions=2, name='actor', chkpt_dir='tmp/sac_stochlite_demo'):
 
 		super().__init__() 
 		self.layer1_dims = layer1_dims
@@ -18,8 +18,8 @@ class ActorNetwork(tf.keras.Model):
 		self.max_action = max_action
 		self.noise = 1e-6 
 		
-		self.layer1 = Dense(self.layer1_dims, activation=None)
-		self.layer2 = Dense(self.layer2_dims, activation=None)
+		self.layer1 = Dense(self.layer1_dims, activation='relu')
+		self.layer2 = Dense(self.layer2_dims, activation='relu')
 		self.mu_layer = Dense(self.n_actions, activation=None)
 		self.sigma_layer = Dense(self.n_actions, activation=None)
 
@@ -50,7 +50,7 @@ class ActorNetwork(tf.keras.Model):
 class CriticNetwork(tf.keras.Model):
 
 	def __init__(self, n_actions, layer1_dims=256, layer2_dims=256,
-			name='critic', chkpt_dir='tmp/sac_stochlite_lin'):
+			name='critic', chkpt_dir='tmp/sac_stochlite_demo'):
 
 		super().__init__()
 
@@ -75,7 +75,7 @@ class CriticNetwork(tf.keras.Model):
 class ValueNetwork(tf.keras.Model):
 
 	def __init__(self, layer1_dims=256, layer2_dims=256, name='value',
-			chkpt_dir='tmp/sac_stochlite_lin'):
+			chkpt_dir='tmp/sac_stochlite_demo'):
 
 		super().__init__()
 

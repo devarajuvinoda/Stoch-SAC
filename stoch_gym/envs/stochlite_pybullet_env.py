@@ -139,9 +139,8 @@ class StochliteEnv(gym.Env):
         observation_low = -observation_high
         self.observation_space = spaces.Box(observation_low, observation_high)
 
-        action_high = np.array([1] * self._action_dim)
+        action_high =  np.array([1] * self._action_dim)
         self.action_space = spaces.Box(-action_high, action_high)
-
         self.commands = np.array([0, 0, 0]) #Joystick commands consisting of cmd_x_velocity, cmd_y_velocity, cmd_ang_velocity
         self.max_linear_xvel = 0.5 #0.4, made zero for only ang vel # calculation is < 0.2 m steplength times the frequency 2.5 Hz
         self.max_linear_yvel = 0.25 #0.25, made zero for only ang vel # calculation is < 0.14 m times the frequency 2.5 Hz
@@ -516,7 +515,7 @@ class StochliteEnv(gym.Env):
 
         for leg in range(4):
             contact_points_with_ground = self._pybullet_client.getContactPoints(self.plane, self.stochlite, -1, foot_ids[leg])
-            if len(contact_points_with_ground) > 0:
+            if contact_points_with_ground is not None and len(contact_points_with_ground) > 0:
                 foot_contact_info[leg] = 1
 
             if self._is_wedge:
@@ -827,7 +826,7 @@ class StochliteEnv(gym.Env):
         yaw_reward = np.exp(-35 * (RPY[2] ** 2))
         height_reward = np.exp(-800 * (desired_height - current_height) ** 2)
 
-        power_reward = -self.total_power/50
+        # power_reward = self.total_power/50
         ang_vel_w = self.GetBaseAngularVelocity()[2]
         pitch_vel = self.GetBaseAngularVelocity()[1]
 
@@ -847,17 +846,23 @@ class StochliteEnv(gym.Env):
         else:
             reward = round(yaw_reward, 4) + round(pitch_reward, 4) + round(roll_reward, 4)\
                      + round(height_reward,4) + 100 * round(step_distance_x, 4) \
-                     + round(power_reward, 4) - ang_vel_w - pitch_vel 
+                     # + round(power_reward, 4) 
+                     # - ang_vel_w - pitch_vel 
 
 
-            #Penalize for standing at same position for continuous 150 steps
-            self.step_disp.append(step_distance_x)
+        #Penalize for standing at same position for continuous 150 steps
+        self.step_disp.append(step_distance_x)
 
-            if(self._n_steps>150):
-                if(sum(self.step_disp)<0.035):
-                    reward = reward-standing_penalty
+        if(self._n_steps>150):
+            if(sum(self.step_disp)<0.035):
+                reward = reward-standing_penalty
 
-
+        # print("reward: ",reward)
+        # print("yaw_reward: ",round(yaw_reward, 4))
+        # print("pitch_reward: ",round(pitch_reward, 4))
+        # print("roll_reward: ",round(roll_reward, 4))
+        # print("height_reward: ",round(height_reward,4))
+        # print("step_distance_x: ",100 * round(step_distance_x, 4))
         return reward, done
 
     def _apply_pd_control(self, motor_commands, motor_vel_commands):

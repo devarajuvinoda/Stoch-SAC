@@ -40,7 +40,7 @@ class ReplayBuffer():
 
 
 class CriticNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_lin_pol'):
+    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_from_demo_nn'):
         super(CriticNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -61,7 +61,7 @@ class CriticNetwork(keras.Model):
         return q
 
 class ActorNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_lin_pol'):
+    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_from_demo_nn'):
         super(ActorNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -70,9 +70,9 @@ class ActorNetwork(keras.Model):
         self.checkpoint_dir = chkpt_dir
         self.checkpoint_file = os.path.join(self.checkpoint_dir, name+'_td3')
 
-        self.fc1 = Dense(self.fc1_dims, activation=None)
-        self.fc2 = Dense(self.fc2_dims, activation=None)
-        self.mu = Dense(self.n_actions, activation=None)
+        self.fc1 = Dense(self.fc1_dims, activation='relu')
+        self.fc2 = Dense(self.fc2_dims, activation='relu')
+        self.mu = Dense(self.n_actions, activation='tanh')
 
 
     def call(self, state):

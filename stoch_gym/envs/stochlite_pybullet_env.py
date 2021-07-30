@@ -846,8 +846,9 @@ class StochliteEnv(gym.Env):
         else:
             reward = round(yaw_reward, 4) + round(pitch_reward, 4) + round(roll_reward, 4)\
                      + round(height_reward,4) + 100 * round(step_distance_x, 4) \
+                     - round(abs(ang_vel_w),4)
                      # + round(power_reward, 4) 
-                     # - ang_vel_w - pitch_vel 
+                     # - pitch_vel 
 
 
         #Penalize for standing at same position for continuous 150 steps
@@ -857,12 +858,13 @@ class StochliteEnv(gym.Env):
             if(sum(self.step_disp)<0.035):
                 reward = reward-standing_penalty
 
-        # print("reward: ",reward)
-        # print("yaw_reward: ",round(yaw_reward, 4))
-        # print("pitch_reward: ",round(pitch_reward, 4))
-        # print("roll_reward: ",round(roll_reward, 4))
-        # print("height_reward: ",round(height_reward,4))
-        # print("step_distance_x: ",100 * round(step_distance_x, 4))
+#         print("reward: ",reward)
+#         print("yaw_reward: ",round(yaw_reward, 4))
+#         print("pitch_reward: ",round(pitch_reward, 4))
+#         print("roll_reward: ",round(roll_reward, 4))
+#         print("height_reward: ",round(height_reward,4))
+#         print("step_distance_x: ",100 * round(step_distance_x, 4))
+#         print("ang_vel_w: ",ang_vel_w)
         return reward, done
 
     def _apply_pd_control(self, motor_commands, motor_vel_commands):

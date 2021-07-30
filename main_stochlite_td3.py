@@ -11,20 +11,20 @@ import stoch_gym.envs.stochlite_pybullet_env as e
 from gym.envs.registration import registry, register, make, spec
 import tensorflow as tf
 # give tuned actions for diversified dataset when working with slopes, tuned actions wont affect much in flat ground walking
-tuned_actions_Stochlite = np.array([[-0.8, -0.8, -0.8, -0.8, 
+tuned_actions_Stochlite = np.array([[-0.5, -0.5, -0.5, -0.5, 
                                         0.0, 0.0, 0.0, 0.0,
                                         -0.02, -0.02, -0.02, -0.02,
                                         0.4, 0.0, 0.0],
 
-                                    [-1.0, -1.0, -1.0, -1.0, 
+                                    [-0.4, -0.4, -0.4, -0.4, 
                                         0.0, 0.0, 0.0, 0.0,
-                                        -0.04, -0.04, -0.04, -0.04,
+                                        -0.02, -0.02, -0.02, -0.02,
                                         0.3, 0.0, 0.0],
                                         
-                                    [-1.0, -1.0, -1.0, -1.0, 
+                                    [-0.4, -0.4, -0.4, -0.4, 
                                         0.0, 0.0, 0.0, 0.0,
-                                        -0.05, -0.05, -0.05, -0.05,
-                                        0.35, 0.0, 0.0]])
+                                        -0.02, -0.02, -0.02, -0.02,
+                                        1, 0.0, 0.0]])
 
 
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
 
     n_games = 2001
-    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn' + str(n_games) + '_games.png'
+    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn2_' + str(n_games) + '_games.png'
 
     best_score = env.reward_range[0]
     score_history = []
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             observation = env.reset()
             done = False
             score = 0
-            for ii in np.arange(0,5000):
+            for ii in np.arange(0,1000):
                 next_observation, reward, done, info = env.step(tuned_actions_Stochlite[i])
                 score += reward
                 agent.store_tuples(observation, tuned_actions_Stochlite[i], reward, next_observation, done)

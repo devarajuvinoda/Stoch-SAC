@@ -40,7 +40,7 @@ class ReplayBuffer():
 
 
 class CriticNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_from_demo_nn'):
+    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_from_demo_nn2'):
         super(CriticNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -61,7 +61,7 @@ class CriticNetwork(keras.Model):
         return q
 
 class ActorNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_from_demo_nn'):
+    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_from_demo_nn2'):
         super(ActorNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims

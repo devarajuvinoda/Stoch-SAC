@@ -118,11 +118,12 @@ if __name__ == '__main__':
             observation = observation_
         score_history.append(score)
         avg_score = np.mean(score_history[-100:])
-        if avg_score > best_score:
-            best_score = avg_score
-            agent.save_models()
-        x = [j+1 for j in range(i+1)]
-        plot_learning_curve(x, score_history, figure_file)
+        if not load_chkpt:
+            if avg_score > best_score:
+                best_score = avg_score
+                agent.save_models()
+            x = [j+1 for j in range(i+1)]
+            plot_learning_curve(x, score_history, figure_file)
 
         print('episode ', i, 'score %.1f' % score,
                 'average score %.1f' % avg_score)

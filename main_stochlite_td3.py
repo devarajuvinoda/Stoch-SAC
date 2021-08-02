@@ -10,6 +10,8 @@ import stoch_gym.envs.stochlite_pybullet_env as e
 #Registering new environments
 from gym.envs.registration import registry, register, make, spec
 import tensorflow as tf
+from utils.logger import DataLog
+
 # give tuned actions for diversified dataset when working with slopes, tuned actions wont affect much in flat ground walking
 tuned_actions_Stochlite = np.array([[-0.5, -0.5, -0.5, -0.5, 
                                         0.0, 0.0, 0.0, 0.0,
@@ -48,7 +50,7 @@ if __name__ == '__main__':
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
 
     n_games = 2001
-    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn2_' + str(n_games) + '_games.png'
+    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn5_' + str(n_games) + '_games.png'
 
     best_score = env.reward_range[0]
     score_history = []
@@ -62,14 +64,14 @@ if __name__ == '__main__':
 #     env.render(mode='human')
 
     if not load_chkpt:
-        for i in range(3):  
+        for i in range(10):  
             observation = env.reset()
             done = False
             score = 0
             for ii in np.arange(0,1000):
-                next_observation, reward, done, info = env.step(tuned_actions_Stochlite[i])
+                next_observation, reward, done, info = env.step(tuned_actions_Stochlite[i%3])
                 score += reward
-                agent.store_tuples(observation, tuned_actions_Stochlite[i], reward, next_observation, done)
+                agent.store_tuples(observation, tuned_actions_Stochlite[i%3], reward, next_observation, done)
                 # demo_states.append(next_observation)
                 # demo_actions.append(tuned_actions_Stochlite[i])
             print("Returns of the experiment:",score)
@@ -107,7 +109,7 @@ if __name__ == '__main__':
         while not done:
             action = agent.choose_action(observation)            
             observation_, reward, done, info = env.step(action)
-            if i > 500:
+            if i > 100:
                 agent.store_tuples(observation, action, reward, observation_, done)
             
             if not load_chkpt:
@@ -121,7 +123,9 @@ if __name__ == '__main__':
         if not load_chkpt:
             if avg_score > best_score:
                 best_score = avg_score
-                agent.save_models()
+                agent.save_models("best")
+            if i%40==0:
+                agent.save_models(i)
             x = [j+1 for j in range(i+1)]
             plot_learning_curve(x, score_history, figure_file)
 

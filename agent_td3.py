@@ -40,7 +40,7 @@ class ReplayBuffer():
 
 
 class CriticNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_from_demo_nn2'):
+    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_demo_nn2'):
         super(CriticNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -61,7 +61,7 @@ class CriticNetwork(keras.Model):
         return q
 
 class ActorNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_from_demo_nn2'):
+    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_demo_nn2'):
         super(ActorNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -70,9 +70,9 @@ class ActorNetwork(keras.Model):
         self.checkpoint_dir = chkpt_dir
         self.checkpoint_file = os.path.join(self.checkpoint_dir, name+'_td3')
 
-        self.fc1 = Dense(self.fc1_dims, activation='relu')
-        self.fc2 = Dense(self.fc2_dims, activation='relu')
-        self.mu = Dense(self.n_actions, activation='tanh')
+        self.fc1 = Dense(self.fc1_dims, activation= 'relu')
+        self.fc2 = Dense(self.fc2_dims, activation= 'relu')
+        self.mu = Dense(self.n_actions, activation= 'tanh')
 
 
     def call(self, state):
@@ -136,11 +136,11 @@ class Agent():
         self.update_network_parameters(tau=1)
 
     def choose_action(self, observation):
-        if self.time_step < self.warmup:
-            mu = np.random.normal(scale=self.noise, size=(self.n_actions,))
-        else:
-            state = tf.convert_to_tensor([observation], dtype=tf.float32)
-            mu = self.actor(state)[0] # returns a batch size of 1, want a scalar array
+        # if self.time_step < self.warmup:
+        #     mu = np.random.normal(scale=self.noise, size=(self.n_actions,))
+        # else:
+        state = tf.convert_to_tensor([observation], dtype=tf.float32)
+        mu = self.actor(state)[0] # returns a batch size of 1, want a scalar array
         mu_prime = mu + np.random.normal(scale=self.noise)
         
         mn = np.array([-1,-1,-1,-1,0,0,0,0,-0.2,-0.2,-0.2,-0.2,-1,-1,-1])
@@ -166,12 +166,13 @@ class Agent():
         states_ = tf.convert_to_tensor(new_states, dtype=tf.float32)
 
         with tf.GradientTape(persistent=True) as tape:
+            mn = np.array([-1,-1,-1,-1,0,0,0,0,-0.2,-0.2,-0.2,-0.2,-1,-1,-1])
+            mx = np.array([1,1,1,1,0,0,0,0,0.2,0.2,0.2,0.2,1,1,1])
             target_actions = self.target_actor(states_)
             target_actions = target_actions + \
                     tf.clip_by_value(np.random.normal(scale=0.2), -0.5, 0.5)
 
-            target_actions = tf.clip_by_value(target_actions, self.min_action, 
-                                          self.max_action)
+            target_actions = tf.clip_by_value(target_actions, mn, mx)
         
             q1_ = self.target_critic_1(states_, target_actions)
             q2_ = self.target_critic_2(states_, target_actions)
@@ -246,23 +247,23 @@ class Agent():
 
         self.target_critic_2.set_weights(weights)
 
-    def save_models(self):
+    def save_models(self, episode_num):
         print('... saving models ...')
-        self.actor.save_weights(self.actor.checkpoint_file)
-        self.critic_1.save_weights(self.critic_1.checkpoint_file)
-        self.critic_2.save_weights(self.critic_2.checkpoint_file)
-        self.target_actor.save_weights(self.target_actor.checkpoint_file)
-        self.target_critic_1.save_weights(self.target_critic_1.checkpoint_file)
-        self.target_critic_2.save_weights(self.target_critic_2.checkpoint_file)
+        self.actor.save_weights(self.actor.checkpoint_file+str(episode_num))
+        self.critic_1.save_weights(self.critic_1.checkpoint_file+str(episode_num))
+        self.critic_2.save_weights(self.critic_2.checkpoint_file+str(episode_num))
+        self.target_actor.save_weights(self.target_actor.checkpoint_file+str(episode_num))
+        self.target_critic_1.save_weights(self.target_critic_1.checkpoint_file+str(episode_num))
+        self.target_critic_2.save_weights(self.target_critic_2.checkpoint_file+str(episode_num))
 
-    def load_models(self):
+    def load_models(self, episode_num):
         
         print('... loading models ...')
-        self.actor.load_weights(self.actor.checkpoint_file)
-        self.critic_1.load_weights(self.critic_1.checkpoint_file)
-        self.critic_2.load_weights(self.critic_2.checkpoint_file)
-        self.target_actor.load_weights(self.target_actor.checkpoint_file)
-        self.target_critic_1.load_weights(self.target_critic_1.checkpoint_file)
-        self.target_critic_2.load_weights(self.target_critic_2.checkpoint_file)
+        self.actor.load_weights(self.actor.checkpoint_file+str(episode_num))
+        self.critic_1.load_weights(self.critic_1.checkpoint_file+str(episode_num))
+        self.critic_2.load_weights(self.critic_2.checkpoint_file+str(episode_num))
+        self.target_actor.load_weights(self.target_actor.checkpoint_file+str(episode_num))
+        self.target_critic_1.load_weights(self.target_critic_1.checkpoint_file+str(episode_num))
+        self.target_critic_2.load_weights(self.target_critic_2.checkpoint_file+str(episode_num))
 
 

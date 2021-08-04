@@ -60,7 +60,8 @@ if __name__ == '__main__':
     
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
     
-    n_games = 1
+    n_games = 51
+    num_diff_pol = 20
     file_name = 'stochlite_plot_simple_pol_zero2.png'
     figure_file = 'plots/' + file_name 
     best_score = env.reward_range[0]
@@ -72,6 +73,7 @@ if __name__ == '__main__':
     print("initial policy: ",init_policy)
     epsilon = [0.05, 0.04, 0.03, 0.08, 0.1]  
     load_chkpt = False
+    
     for eps_id in range(len(epsilon)):
         init_policy = np.zeros(15)
         file_name = 'stochlite_plot_simple_pol_zero_' + str((int)(1000*epsilon[eps_id])) +'.png'
@@ -89,7 +91,7 @@ if __name__ == '__main__':
                 zero_delta_cnt = np.zeros(15)
                 update_vals = []
 
-                for j in range(20):
+                for j in range(num_diff_pol):
                     delta = np.random.randint(-1,2, size=15)
                     action = init_policy + delta*epsilon[eps_id]
                     action = np.clip(action, -1.0, 1.0)
@@ -123,7 +125,7 @@ if __name__ == '__main__':
                                 zero_delta_score[k] += score
                                 zero_delta_cnt[k] += 1
 
-                x = [k+1 for k in range((i+1)*20)]
+                x = [k+1 for k in range((i+1)*num_diff_pol)]
                 plot_learning_curve(x, score_history, figure_file)
 
                 for j in range(15):
@@ -144,9 +146,9 @@ if __name__ == '__main__':
         #         init_policy = np.clip(init_policy, -1, 1)
 
                 print("learned policy: ", init_policy)
-            x = [i+1 for i in range(n_games*20)]
+            x = [i+1 for i in range(n_games*num_diff_pol)]            
             plot_learning_curve(x, score_history, figure_file)
-
+            plt.close(figure_file)
         else:
             # with open('./tmp/saved_action_arr.npy', 'rb') as f:
             action = np.load('./tmp/saved_action_arr_zero2.npy')

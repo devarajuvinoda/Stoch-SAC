@@ -40,7 +40,7 @@ class ReplayBuffer():
 
 
 class CriticNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_demo_nn2'):
+    def __init__(self, fc1_dims, fc2_dims, name, chkpt_dir='tmp/td3_demo_nn6'):
         super(CriticNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -61,7 +61,7 @@ class CriticNetwork(keras.Model):
         return q
 
 class ActorNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_demo_nn2'):
+    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3_demo_nn6'):
         super(ActorNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -143,8 +143,8 @@ class Agent():
         mu = self.actor(state)[0] # returns a batch size of 1, want a scalar array
         mu_prime = mu + np.random.normal(scale=self.noise)
         
-        mn = np.array([-1,-1,-1,-1,0,0,0,0,-0.2,-0.2,-0.2,-0.2,-1,-1,-1])
-        mx = np.array([1,1,1,1,0,0,0,0,0.2,0.2,0.2,0.2,1,1,1])
+        mn = np.ones(15)*-1 #np.array([-1,-1,-1,-1,0,0,0,0,-0.2,-0.2,-0.2,-0.2,-1,-1,-1])
+        mx = np.ones(15) #np.array([1,1,1,1,0,0,0,0,0.2,0.2,0.2,0.2,1,1,1])
         mu_prime = tf.clip_by_value(mu_prime, mn, mx)
         self.time_step += 1
 

@@ -1,2 +1,2 @@
-model_checkpoint_path: "target_critic_2_td3600"
-all_model_checkpoint_paths: "target_critic_2_td3600"
+model_checkpoint_path: "target_critic_2_td32000"
+all_model_checkpoint_paths: "target_critic_2_td32000"

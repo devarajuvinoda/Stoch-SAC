@@ -50,7 +50,7 @@ if __name__ == '__main__':
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
 
     n_games = 2001
-    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn5_' + str(n_games) + '_games.png'
+    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn6_' + str(n_games) + '_games.png'
 
     best_score = env.reward_range[0]
     score_history = []

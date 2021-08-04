@@ -15,11 +15,14 @@ class ActorNetwork(tf.keras.Model):
 		self.layer2_dims = layer2_dims
 		self.n_actions = n_actions 
 		self.chkpt_dir = os.path.join(chkpt_dir, name+'_sac')
-		self.max_action = max_action
+		self.max_action = np.array([1,1,1,1,0,0,0,0,0.2,0.2,0.2,0.2,1,1,1])
+#                 max_action
 		self.noise = 1e-6 
 		
-		self.layer1 = Dense(self.layer1_dims, activation='relu')
-		self.layer2 = Dense(self.layer2_dims, activation='relu')
+		self.layer1 = Dense(self.layer1_dims, activation=None)
+#                             'relu')
+		self.layer2 = Dense(self.layer2_dims, activation=None)
+#                             'relu')
 		self.mu_layer = Dense(self.n_actions, activation=None)
 		self.sigma_layer = Dense(self.n_actions, activation=None)
 

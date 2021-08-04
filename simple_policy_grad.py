@@ -61,13 +61,14 @@ if __name__ == '__main__':
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
     
     n_games = 201
-    file_name = 'stochlite_plot_simple_pol.png'
+    file_name = 'stochlite_plot_simple_pol_zero.png'
     figure_file = 'plots/' + file_name 
     best_score = env.reward_range[0]
     score_history = []
     
     np.random.seed(n_games)    
-    init_policy = np.clip(np.random.randn(1,15), -1, 1)[0]
+#     init_policy = np.clip(np.random.randn(1,15), -1, 1)[0]
+    init_policy = np.zeros(15)
     print("initial policy: ",init_policy)
     epsilon = 0.05
     load_chkpt = False
@@ -104,7 +105,7 @@ if __name__ == '__main__':
                     if best_score < avg_score:
                         best_score = avg_score
                         # with open('./tmp/saved_action_arr.npy', 'wb') as f:
-                        np.save('./tmp/saved_action_arr.npy', action)
+                        np.save('./tmp/saved_action_arr_zero.npy', action)
                     for k in range(15):
                         if delta[k]<0:
                             neg_delta_score[k] += score

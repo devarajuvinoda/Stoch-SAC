@@ -12,39 +12,6 @@ from gym.envs.registration import registry, register, make, spec
 import tensorflow as tf
 from utils.logger import DataLog
 
-# give tuned actions for diversified dataset when working with slopes, tuned actions wont affect much in flat ground walking
-tuned_actions_Stochlite = np.array([[-0.5, -0.5, -0.5, -0.5, 
-                                        0.0, 0.0, 0.0, 0.0,
-                                        -0.02, -0.02, -0.02, -0.02,
-                                        0.4, 0.0, 0.0],
-
-                                    [-0.4, -0.4, -0.4, -0.4, 
-                                        0.0, 0.0, 0.0, 0.0,
-                                        -0.02, -0.02, -0.02, -0.02,
-                                        0.3, 0.0, 0.0],
-                                        
-                                    [-0.4, -0.4, -0.4, -0.4, 
-                                        0.0, 0.0, 0.0, 0.0,
-                                        -0.02, -0.02, -0.02, -0.02,
-                                        1, 0.0, 0.0]])
-
-'''
-initial policy:  [-1., 0.3426804, 1., -0.25243604, 
-    0.98132079, 0.51421884,  0.22117967, -1., 
-    -0.18949583, 0.25500144, -0.45802699, 0.43516349,
-     -0.58359505, 0.81684707, 0.67272081]
-
-
-'''
- 
-def get_mean(arr):
-#     mx = max(arr)
-#     mn = max(arr)
-#     if mn==mx:
-#         mx += 1
-#     arr = (2*(arr-mn)/(mx-mn)) - 1
-    arr = np.array(arr)
-    return np.mean(arr)
 
 if __name__ == '__main__':
     #env = gym.make('LunarLanderContinuous-v2')
@@ -52,7 +19,7 @@ if __name__ == '__main__':
     # env = gym.make('BipedalWalker-v2')
     register(id='Stochlite-v0',
            entry_point='stoch_gym.envs.stochlite_pybullet_env:StochliteEnv', 
-           kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 15, 'stairs': 0} )
+           kwargs = {'gait' : 'trot', 'render': True, 'action_dim': 15, 'stairs': 0} )
 
     #     env = gym.make('InvertedPendulumBulletEnv-v0')
     #     env = gym.make('HalfCheetahBulletEnv-v0')
@@ -72,7 +39,7 @@ if __name__ == '__main__':
     init_policy = np.zeros(15)
     print("initial policy: ",init_policy)
     epsilon = [0.05, 0.04, 0.03, 0.08, 0.1]  
-    load_chkpt = False
+    load_chkpt = True
     
     for eps_id in range(len(epsilon)):
         init_policy = np.zeros(15)
@@ -151,11 +118,12 @@ if __name__ == '__main__':
             plt.close(figure_file)
         else:
             # with open('./tmp/saved_action_arr.npy', 'rb') as f:
-            action = np.load('./tmp/saved_action_arr_zero2.npy')
+            action = np.load('./tmp/saved_action_arr_zero_50.npy')
             print(action)
             done = False
-            while not done:      
-                    observation_, reward, done, info = env.step(action)
-        #             print("action: ",action)
-        #             print("reward: ",reward)
+            for i in range(3):                
+                while not done:      
+                        observation_, reward, done, info = env.step(action)
+            #             print("action: ",action)
+            #             print("reward: ",reward)
 

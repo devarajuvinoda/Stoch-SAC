@@ -1,6 +1,6 @@
 import gym
 import numpy as np
-from agent_td3 import Agent
+from agent_ddpg import Agent
 from plot_utils import plot_learning_curve
 import pybullet_envs
 import pybullet
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # env = gym.make('BipedalWalker-v2')
     register(id='Stochlite-v0',
            entry_point='stoch_gym.envs.stochlite_pybullet_env:StochliteEnv', 
-           kwargs = {'gait' : 'trot', 'render': True, 'action_dim': 15, 'stairs': 0} )
+           kwargs = {'gait' : 'trot', 'render': False, 'action_dim': 15, 'stairs': 0} )
 
     #     env = gym.make('InvertedPendulumBulletEnv-v0')
     #     env = gym.make('HalfCheetahBulletEnv-v0')
@@ -50,12 +50,12 @@ if __name__ == '__main__':
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
 
     n_games = 2001
-    figure_file = 'plots/' + 'stochlite_td3_from_demo_nn6_' + str(n_games) + '_games.png'
+    figure_file = 'plots/' + 'stochlite_ddpg_from_demo_' + str(n_games) + '_games.png'
 
     best_score = env.reward_range[0]
     score_history = []
 
-    load_chkpt = True
+    load_chkpt = False
 
 
     if load_chkpt:

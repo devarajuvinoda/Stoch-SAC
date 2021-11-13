@@ -138,19 +138,19 @@ class Agent:
     def store_tuples(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
 
-    def save_models(self):
+    def save_models(self, episode_num):
         print('... saving models ...')
-        self.actor.save_weights(self.actor.checkpoint_file)
-        self.target_actor.save_weights(self.target_actor.checkpoint_file)
-        self.critic.save_weights(self.critic.checkpoint_file)
-        self.target_critic.save_weights(self.target_critic.checkpoint_file)
+        self.actor.save_weights(self.actor.checkpoint_file+str(episode_num))
+        self.target_actor.save_weights(self.target_actor.checkpoint_file+str(episode_num))
+        self.critic.save_weights(self.critic.checkpoint_file+str(episode_num))
+        self.target_critic.save_weights(self.target_critic.checkpoint_file+str(episode_num))
 
-    def load_models(self):
+    def load_models(self, episode_num):
         print('... loading models ...')
-        self.actor.load_weights(self.actor.checkpoint_file)
-        self.target_actor.load_weights(self.target_actor.checkpoint_file)
-        self.critic.load_weights(self.critic.checkpoint_file)
-        self.target_critic.load_weights(self.target_critic.checkpoint_file)
+        self.actor.load_weights(self.actor.checkpoint_file+str(episode_num))
+        self.target_actor.load_weights(self.target_actor.checkpoint_file+str(episode_num))
+        self.critic.load_weights(self.critic.checkpoint_file+str(episode_num))
+        self.target_critic.load_weights(self.target_critic.checkpoint_file+str(episode_num))
 
     def choose_action(self, observation, evaluate=False):
         state = tf.convert_to_tensor([observation], dtype=tf.float32)

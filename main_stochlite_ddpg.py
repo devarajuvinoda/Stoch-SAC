@@ -79,6 +79,7 @@ if __name__ == '__main__':
                 agent.store_tuples(observation, tuned_actions_Stochlite[i%3], reward, next_observation, done)
                 # demo_states.append(next_observation)
                 # demo_actions.append(tuned_actions_Stochlite[i])
+                observation = next_observation
             print("Returns of the experiment:",score)
 
     # for i in range(5000):

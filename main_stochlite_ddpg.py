@@ -41,11 +41,16 @@ if __name__ == '__main__':
     #     env = gym.make('InvertedPendulumBulletEnv-v0')
     #     env = gym.make('HalfCheetahBulletEnv-v0')
     env = gym.make('Stochlite-v0')
-    
-    agent = Agent(alpha=0.001, beta=0.001,
-            input_dims=env.observation_space.shape, tau=0.005,
-            env=env, batch_size=100, layer1_size=400, layer2_size=300,
-            n_actions=env.action_space.shape[0])
+    agent = Agent(input_dims=env.observation_space.shape, 
+            alpha=0.001, beta=0.002, env=env,
+            gamma=0.99, n_actions=env.action_space.shape[0], 
+            max_size=1000000, tau=0.005, 
+            fc1=400, fc2=300, batch_size=64, noise=0.1)
+
+    # agent = Agent(alpha=0.001, beta=0.001,
+    #         input_dims=env.observation_space.shape, tau=0.005,
+    #         env=env, batch_size=100, layer1_size=400, layer2_size=300,
+    #         n_actions=env.action_space.shape[0])
     
     pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
 

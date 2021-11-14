@@ -41,8 +41,14 @@ class ReplayBuffer:
 
         return states, actions, rewards, states_, dones
 
+    def get_buffer(self):
+        return self.state_memory, self.action_memory, self.reward_memory, self.new_state_memory, self.terminal_memory
+
+    def set_buffer(self, states, actions, rewards, states_, dones):
+        self.state_memory, self.action_memory, self.reward_memory, self.new_state_memory, self.terminal_memory=states, actions, rewards, states_, dones
+
 class CriticNetwork(keras.Model):
-    def __init__(self, fc1_dims=512, fc2_dims=512,
+    def __init__(self, fc1_dims=128, fc2_dims=128,
             name='critic', chkpt_dir='tmp/ddpg_demo'):
         super(CriticNetwork, self).__init__()
         self.fc1_dims = fc1_dims
@@ -66,7 +72,7 @@ class CriticNetwork(keras.Model):
         return q
 
 class ActorNetwork(keras.Model):
-    def __init__(self, fc1_dims=512, fc2_dims=512, n_actions=2, name='actor',
+    def __init__(self, fc1_dims=128, fc2_dims=128, n_actions=2, name='actor',
             chkpt_dir='tmp/ddpg_demo'):
         super(ActorNetwork, self).__init__()
         self.fc1_dims = fc1_dims
@@ -93,7 +99,7 @@ class ActorNetwork(keras.Model):
 class Agent:
     def __init__(self, input_dims, alpha=0.001, beta=0.002, env=None,
             gamma=0.99, n_actions=2, max_size=1000000, tau=0.005, 
-            fc1=400, fc2=300, batch_size=64, noise=0.1):
+            fc1=128, fc2=128, batch_size=64, noise=0.1):
         self.gamma = gamma
         self.tau = tau
         self.memory = ReplayBuffer(max_size, input_dims, n_actions)
@@ -166,6 +172,7 @@ class Agent:
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
+            print("not through")
             return
 
         state, action, reward, new_state, done = \
